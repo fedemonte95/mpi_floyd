@@ -50,7 +50,13 @@ int main(int argc, char* argv[]){
 			int index = 0;
 			
 			while(single_line[index] && (renglones == 0)){
-				//printf("%c \n",single_line[index]);
+				/*
+				hacemos un ciclo donde se obtiene el primer numero, cuando tope con una coma empezamos a recolectar
+				caracteres para el segundo numero y para cuando topemos con )querra decir que ya tenemos lo numeros 
+				y entonces hacemos el atoi y el itoa, despues matrix[num1][2] = 1 y continuamos con el ciclo de single_line[index]
+				para ver si hay mas tuplas en ese renglon una vez que el renglon acabe, seguira con el siguiente y de esa manera buscaremos los parentesis. 
+				*/
+				
 
 				if(isalpha(single_line[index])){
 					// busqueda de vectores
@@ -81,7 +87,7 @@ int main(int argc, char* argv[]){
 				printf(" ulti %c  \n",single_line[index+8]);
 			}
 		}
-	}else{
+	} else {
 		printf("Failed to open the file.\n");
 	} // end of else failed to open file  
 
