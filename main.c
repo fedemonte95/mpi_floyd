@@ -3,8 +3,48 @@
 #include <ctype.h>
 #include <string.h>
 
+int get_cantidad_vertices(char pfilename[]){
+	FILE* fp;
+
+	char single_line[150];
+	char cant_nodos_char[4];
+
+	int renglones = 0;
+	int index;
+	int cant_nodos_index;
+	int vertices;
+
+	fp = fopen(pfilename, "r");
+
+	while(!feof(fp)){
+		fgets(single_line, 150, fp);
+			index = 0;
+			while(single_line[index] && (renglones == 0)){
+				if(isalpha(single_line[index])){
+					while(isalpha(single_line[index]) || single_line[index] == '=' || single_line[index] == ' '){
+						index++;
+					}
+					cant_nodos_index = 0;
+					while(single_line[index] != '\n'){
+						cant_nodos_char[cant_nodos_index] = single_line[index];
+						index++;
+						cant_nodos_index++;
+					}
+					vertices = atoi(cant_nodos_char);
+				}
+					index++;
+					renglones++;
+			}
+	}
+	fclose(fp);
+	return(vertices);
+}
+void matriz_adyacencia(){
+
+}
+
 int main(int argc, char* argv[]){
-	
+	/*
 	int filas = 1024;
 	int conlumnas = 1024;
 	int matrix[filas][conlumnas];
@@ -15,83 +55,78 @@ int main(int argc, char* argv[]){
 			//printf("%d ", matrix[i][j]); // imprime elemento de matriz
 		}
 	
-	
+	*/
+
 	FILE* fp;
 	char* filename;
-	char ch;
+	char single_line[150];
 
-	char num_char;
-	char num2_char;
+	char num_char[4];
+	char num2_char[4];
 	int num2_int;
 	int num_int;
+	int number_index;
 
-	char single_line[150];
-	// check if a filename has been specified in the command
+	int cant_vertices;
+	int renglones;
+	int index;
 
 	if(argc < 2){
-
 		printf("Missing filename\n");
 		exit(-1);
 		return 1;
 
 	} else {
 		filename = argv[1];
-		//printf("Filename: %s\n", filename);
+		cant_vertices = get_cantidad_vertices(filename);
+		//printf(" Cantidad de vertices %d\n", cant_vertices);
 	}
-
-	// Open file in read-only mode
-	fp = fopen(filename, "r");
-
-	// if the file opens succesfully, then prints contents
-	int renglones = 0;
-	if(fp){
+	fp = fopen(filename, "r"); // Opens file in read-only mode
+	if(fp){ // if the file opens succesfully, then prints contents
+		int renglon = 0;
 		while(!feof(fp)){
 			fgets(single_line, 150, fp);
-			int index = 0;
-			
-			while(single_line[index] && (renglones == 0)){
-				/*
-				hacemos un ciclo donde se obtiene el primer numero, cuando tope con una coma empezamos a recolectar
-				caracteres para el segundo numero y para cuando topemos con )querra decir que ya tenemos lo numeros 
-				y entonces hacemos el atoi y el itoa, despues matrix[num1][2] = 1 y continuamos con el ciclo de single_line[index]
-				para ver si hay mas tuplas en ese renglon una vez que el renglon acabe, seguira con el siguiente y de esa manera buscaremos los parentesis. 
-				*/
-				
-
-				if(isalpha(single_line[index])){
-					// busqueda de vectores
-					
-					//cant_nodos_char[0] = '1';
-					
-					// printf("%c \n", single_line[index]);
-					while(isalpha(single_line[index]) || single_line[index] == '=' || single_line[index] == ' '){
+			index = 0;
+			while(single_line[index]){
+				if (single_line[index] == '(') { // si encuentra un parentesis abierto
+					//printf("Encontro parentesis abierto \n");
+					index++; // aumenta una posicion para ver numero
+					number_index = 0;
+					// empieza concatenacion de primer numero char
+					while(single_line[index] != ','){
+						// mientras el indice del renglon sea un numero y diferente de , concatenamos la posicion del numero
+						num_char[number_index] = single_line[index];
 						index++;
+						number_index++;
 					}
-					int cant_nodos_index = 0;
-					char cant_nodos_char[3];
-					while(single_line[index] != '\n'){
-						
-						
-						cant_nodos_char[cant_nodos_index] = single_line[index];
-						//printf("Cant nodos char:  %c\n",cant_nodos_char[cant_nodos_index] );
-						index++;
-						cant_nodos_index++;
-					}
-					printf(" cantidad de vertices %s\n",cant_nodos_char);
-					int vertices = atoi(cant_nodos_char);
-					printf("%d \n", vertices);
-				}
+					num_int = atoi(num_char);  
+					// ahora a buscar el segundo numero de la tupla
+					
+					//printf("%d\n", num_int);
+					//printf("%c\n", single_line[index]);
+					index++;
 
+					number_index = 0;
+					strcpy(num2_char, " ");
+					num2_char[3] = ' ';
+					while(single_line[index] != ')'){
+						num2_char[number_index] = single_line[index];
+						index++;
+						number_index++;
+
+					}
+					num2_int = atoi(num2_char);
+					printf("%d\n", num2_int);
+					// printf(" ultimo %c\n", single_line[index]); // imprime )
+				}// end of if 
 				index++;
-				renglones++;
-				printf(" ulti %c  \n",single_line[index+8]);
 			}
+			renglon++;
 		}
+
 	} else {
 		printf("Failed to open the file.\n");
 	} // end of else failed to open file  
-
-	
 	return(0);
 }
 
